@@ -17,7 +17,7 @@ No processo de aquisição de uma imagem, a observação é submetida a funçõe
 - A observação obtida, representada por g, é dada pela convolução de f com h mais o ruído:
 <code> g = conv(f, h) + n </code>
 
-A restauração da imagem pode ser dada pelos filtros da pseudo-inversa, de Miller ou de Tikhonov.
+A restauração da imagem pode ser dada pelos filtros da pseudo-inversa, de Wiener ou de Tikhonov.
 
 A descrição do problema está detalhado no arquivo Quarta_atividade_pratica.pdf, e os detalhes da aplicação destes filtros são explicados na forma de comentários no código.
 
