@@ -107,3 +107,19 @@ figure(4), colormap(gray(256)), image(real(f_norm)), title("inversa aplicada");
 f_shift = fftshift(f_norm);
 figure(5), colormap(gray(256)), image(real(f_shift)), title("shift sobre a inversa");
 
+# ------------------------------------------------------------
+# Multiplicando o divisor por uma constante
+# ------------------------------------------------------------
+
+constante = 128**2;
+Fconst = G ./ (constante * H);
+# Os valores obtidos tem magnitude muito diferente da operação sem a multiplicação com a constante
+fconst = ifft2(Fconst);
+
+tommaxconst = max(max(real(fconst)));
+tomminconst = min(min(real(fconst)));
+fconstnorm = 256*(real(fconst) - tomminconst)/(tommaxconst-tomminconst);
+
+# Mas ao normalizar, os valores são iguais, pois a proporção entre os valores da imagem restaurada são os mesmos.
+fconstshift = fftshift(fconstnorm);
+figure(6), colormap(gray(256)), image(real(fconstshift)), title("shift sobre a inversa com constante");
