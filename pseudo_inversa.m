@@ -44,3 +44,6 @@ end
 
 # Normalização para preservar o nível DC
 h = h ./ sum(sum(h));
+# h com 0-padding para evitar convolucao circular
+hpad = zeros(x * 2, y * 2);
+hpad([x/2 + 1 : x/2 + x], [y/2 + 1 : y/2 + y]) = h;
