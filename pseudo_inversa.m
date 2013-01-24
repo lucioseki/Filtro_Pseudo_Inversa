@@ -41,3 +41,6 @@ for i = 1 : x
 		h(i, j) = left * e**(-( ((i - x / 2)**2 + (j - y / 2)**2) / expdiv ));
 	end
 end
+
+# Normalização para preservar o nível DC
+h = h ./ sum(sum(h));
