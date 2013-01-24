@@ -48,8 +48,30 @@ h = h ./ sum(sum(h));
 hpad = zeros(x * 2, y * 2);
 hpad([x/2 + 1 : x/2 + x], [y/2 + 1 : y/2 + y]) = h;
 
+# ------------------------------------------------------------
+# Convolução
+# ------------------------------------------------------------
+
 # convolução entre a imagem original e a gaussiana
 gconv = conv2(fpad, hpad, "same");
 figure(2), colormap(gray(256)), image(gconv), title("gconv");
 
 # A extensão por zero-padding é necessária para evitar a convolução circular, fenômeno que pegaria posições negativas da matriz, utilizando valores replicados da função. Ao extender a imagem, a operação de convolução deixa de utilizar valores negativos.
+
+# ------------------------------------------------------------
+# Ruído
+# ------------------------------------------------------------
+
+# ruido randomico entre 0 e 1
+n = rand(x);
+# para deixar uniforme, gero numeros negativos tambem
+n = n .- 0.5;
+# multiplico por uma constante para aumentar a magnitude
+n = 20 * n;
+
+# imagem adquirida:
+# convolucao da funcao de espalhamento com a imagem original
+# mais o ruido aditivo uniforme sobre a imagem ruidosa
+g = zeros(x * 2, y * 2);
+g([x/2 + 1 : x/2 + x], [y/2 + 1 : y/2 + y]) = gconv([x/2 + 1 : x/2 + x], [y/2 + 1 : y/2 + y]) .+ n;
+figure(3), colormap(gray(256)), image(g), title("g");
