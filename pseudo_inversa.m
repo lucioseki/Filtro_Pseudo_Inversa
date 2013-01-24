@@ -47,3 +47,9 @@ h = h ./ sum(sum(h));
 # h com 0-padding para evitar convolucao circular
 hpad = zeros(x * 2, y * 2);
 hpad([x/2 + 1 : x/2 + x], [y/2 + 1 : y/2 + y]) = h;
+
+# convolução entre a imagem original e a gaussiana
+gconv = conv2(fpad, hpad, "same");
+figure(2), colormap(gray(256)), image(gconv), title("gconv");
+
+# A extensão por zero-padding é necessária para evitar a convolução circular, fenômeno que pegaria posições negativas da matriz, utilizando valores replicados da função. Ao extender a imagem, a operação de convolução deixa de utilizar valores negativos.
