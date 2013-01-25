@@ -16,9 +16,11 @@ clear all; close all;
 # Imagem original
 # ------------------------------------------------------------
 
+# 1) Considere uma das imagens de dimensão quadrada disponibilizada no moodle (lena.jpg ou relogio.jpg) com MxM pixels.
 f = imread("relogio.jpg");
 [x, y] = size(f);
 
+# 1) a) Estenda a imagem escolhida f(x,y) por dois em ambas as direções considerando a abordagem de "zero-padding"
 # f com 0-padding para evitar convolucao circular
 fpad = zeros(x * 2, y * 2);
 fpad([x/2 + 1 : x/2 + x], [y/2 + 1 : y/2 + y]) = f;
@@ -29,8 +31,9 @@ figure(1), colormap(gray(256)), image(fpad), title("fpad");
 # Gaussiana
 # ------------------------------------------------------------
 
-# variancia = desvio padrao ^ 2
+# 1) b) Construa uma função de espalhamento pontual h(x,y)
 
+# variancia = desvio padrao ^ 2
 variancia = 0.5;
 left = 1 / ((2 * pi * variancia)**0.5);
 expdiv = 2 * variancia;
@@ -42,8 +45,11 @@ for i = 1 : x
 	end
 end
 
+# 1) c) normalize adequadamente a nova matriz de forma que ela preserve o nível DC
 # Normalização para preservar o nível DC
 h = h ./ sum(sum(h));
+
+# 1) d) Estenda a função h(x,y) com o procedimento "zero-padding"
 # h com 0-padding para evitar convolucao circular
 hpad = zeros(x * 2, y * 2);
 hpad([x/2 + 1 : x/2 + x], [y/2 + 1 : y/2 + y]) = h;
@@ -52,16 +58,19 @@ hpad([x/2 + 1 : x/2 + x], [y/2 + 1 : y/2 + y]) = h;
 # Convolução
 # ------------------------------------------------------------
 
+# 1) e) Faça a convolução das imagens estendidas f(x,y) e h(x,y).
 # convolução entre a imagem original e a gaussiana
 gconv = conv2(fpad, hpad, "same");
 figure(2), colormap(gray(256)), image(gconv), title("gconv");
 
+# Explique por que é necessário estender as imagens com zeros para realizar este procedimento.
 # A extensão por zero-padding é necessária para evitar a convolução circular, fenômeno que pegaria posições negativas da matriz, utilizando valores replicados da função. Ao extender a imagem, a operação de convolução deixa de utilizar valores negativos.
 
 # ------------------------------------------------------------
 # Ruído
 # ------------------------------------------------------------
 
+# 1) f) utilize a função rand para incorporar ruído na imagem borrada pela função de espalhamento pontual.
 # ruido randomico entre 0 e 1
 n = rand(x);
 # para deixar uniforme, gero numeros negativos tambem
@@ -69,6 +78,8 @@ n = n .- 0.5;
 # multiplico por uma constante para aumentar a magnitude
 n = 20 * n;
 
+# O objetivo dos itens acima é gerar uma imagem degradada g(x,y) modelada pela equação
+# g(x,y) = f(x,y)*h(x,y)+n(x,y).
 # imagem adquirida:
 # convolucao da funcao de espalhamento com a imagem original
 # mais o ruido aditivo uniforme sobre a imagem ruidosa
@@ -81,6 +92,9 @@ figure(3), colormap(gray(256)), image(g), title("g");
 # ------------------------------------------------------------
 
 # operacao com as dimensoes da imagem original, para diminuir o custo computacional
+
+# 2) Após a geração da imagen g(x,y), calcule:
+# 2) a) uma estimativa para f(x,y) dada pelo filtro de mínima norma sem restrições;
 
 # H = funcao de transferencia (TF de h)
 H = fft2(hpad([x/2 + 1:x/2 + x],[y/2 + 1:y/2 + y]));
