@@ -34,7 +34,7 @@ figure(1), colormap(gray(256)), image(fpad), title("fpad");
 # 1) b) Construa uma função de espalhamento pontual h(x,y)
 
 # variancia = desvio padrao ^ 2
-variancia = 3;
+variancia = 0.5;
 left = 1 / ((2 * pi * variancia)**0.5);
 expdiv = 2 * variancia;
 
@@ -152,4 +152,23 @@ tomminwiener = min(min(real(fwiener)));
 fwienernorm = 256*(real(fwiener) - tomminwiener)/(tommaxwiener-tomminwiener);
 fwienershift = fftshift(fwienernorm);
 figure(7), colormap(gray(256)), image(real(fwienershift)), title("fwiener");
+
+# 2) c) uma estimativa dada pelo filtro algébrico regularizado de Tikhonov.
+FTikhonov = zeros(x, y);
+
+# nao deu muio certo...
+gamma = 10000;
+for u = 1:x
+	for v = 1:y
+		FTikhonov(u, v) = ( conj(H(u,v)) / (abs(H(u,v))**2 + gamma*(-4*pi*(u**2 + v**2))) ) * G(u,v);
+	end
+end
+
+ftikhonov = ifft2(FTikhonov);
+tommaxtikhonov = max(max(real(ftikhonov)));
+tommintikhonov = min(min(real(ftikhonov)));
+
+ftikhonovnorm = 256*(real(ftikhonov) - tommintikhonov)/(tommaxtikhonov-tommintikhonov);
+ftikhonovshift = fftshift(ftikhonovnorm);
+figure(8), colormap(gray(256)), image(real(ftikhonovshift)), title("ftikhonov");
 
