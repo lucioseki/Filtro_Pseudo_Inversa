@@ -34,7 +34,7 @@ figure(1), colormap(gray(256)), image(fpad), title("fpad");
 # 1) b) Construa uma função de espalhamento pontual h(x,y)
 
 # variancia = desvio padrao ^ 2
-variancia = 0.5;
+variancia = 3;
 left = 1 / ((2 * pi * variancia)**0.5);
 expdiv = 2 * variancia;
 
@@ -137,3 +137,19 @@ fconstnorm = 256*(real(fconst) - tomminconst)/(tommaxconst-tomminconst);
 # Mas ao normalizar, os valores são iguais, pois a proporção entre os valores da imagem restaurada são os mesmos.
 fconstshift = fftshift(fconstnorm);
 figure(6), colormap(gray(256)), image(real(fconstshift)), title("shift sobre a inversa com constante");
+
+# 2) b) uma estimativa para a imagem original dada pelo filtro de Wiener
+
+# a inversa da razão sinal ruído é uma constante neste exemplo.
+isnr = 150;
+W = ( abs(H)**2 ./ (abs(H)**2 + isnr) ) ./ H;
+Fwiener = W .* G;
+fwiener = ifft2(Fwiener);
+
+tommaxwiener = max(max(real(fwiener)));
+tomminwiener = min(min(real(fwiener)));
+
+fwienernorm = 256*(real(fwiener) - tomminwiener)/(tommaxwiener-tomminwiener);
+fwienershift = fftshift(fwienernorm);
+figure(7), colormap(gray(256)), image(real(fwienershift)), title("fwiener");
+
